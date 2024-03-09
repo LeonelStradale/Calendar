@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Appointment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,5 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::resource('/appointments', Appointment::class)->middleware('auth');
