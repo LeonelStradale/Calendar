@@ -9,13 +9,18 @@ use Carbon\Carbon;
 
 class Calendar extends Component
 {
-    public function newAppointment($name, $startDate, $endDate)
+    public $openModal = false;
+    public $name;
+    public $startDate = '';
+    public $endDate = '';
+
+    public function newAppointment()
     {
         $validated = Validator::make(
             [
-                'name' => $name,
-                'start_time' => $startDate,
-                'end_time' => $endDate,
+                'name' => $this->name,
+                'start_time' => $this->startDate,
+                'end_time' => $this->endDate,
             ],
             [
                 'name' => 'required|min:1|max:40',
@@ -31,7 +36,13 @@ class Calendar extends Component
             $validated
         );
 
-        return $appointment->id;
+        $this->reset(['openModal', 'name', 'startDate', 'endDate']);
+
+        $this->dispatch('swal', [
+            'icon' => 'success',
+            'title' => 'Well done!',
+            'text' => 'The event has been registered successfully.',
+        ]);
     }
 
     public function updateAppointment($id, $name, $startDate, $endDate)

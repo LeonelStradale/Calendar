@@ -36,22 +36,12 @@
                     meridiem: 'short'
                 },
                 select: function(data) {
-                    var event_name = prompt('Event Name:');
-                    if (!event_name) {
-                        return;
-                    }
-                    // Create New Appointment
-                    @this.newAppointment(event_name, data.start.toISOString(), data.end.toISOString())
-                        .then(
-                            function(id) {
-                                calendar.addEvent({
-                                    id: id,
-                                    title: event_name,
-                                    start: data.startStr,
-                                    end: data.endStr,
-                                });
-                                calendar.unselect();
-                            });
+                    console.log(data);
+                    // Open Modal
+                    @this.set('openModal', true);
+                    // Dates
+                    @this.set('startDate', data.start.toISOString());
+                    @this.set('endDate', data.end.toISOString());
                 },
                 eventDrop: function(data) {
                     console.log(data.event.id)
@@ -68,5 +58,27 @@
             calendar.render();
         });
     </script>
+
+    <x-dialog-modal wire:model="openModal">
+        <x-slot name="title">
+            {{ __('Schedule Appointment') }}
+        </x-slot>
+        <x-slot name="content">
+            <div class="mb-4">
+                <x-label class="mb-1">
+                    {{ __('Name') }}
+                </x-label>
+                <x-input wire:model="name" class="w-full" autofocus required />
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <x-danger-button wire:click="$set('openModal', false)">
+                {{ __('Cancel') }}
+            </x-danger-button>
+            <x-button class="ml-2" wire:click="newAppointment()">
+                {{ __('Schedule') }}
+            </x-button>
+        </x-slot>
+    </x-dialog-modal>
 
 </div>
